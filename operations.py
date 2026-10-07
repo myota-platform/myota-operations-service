@@ -9,11 +9,16 @@ import os
 import threading
 import time
 from datetime import datetime, timezone
-from http.server import ThreadingHTTPServer
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
-from common import JsonHandler, Store, json_default, verify_token
+from common import (
+    BoundedThreadingHTTPServer,
+    JsonHandler,
+    Store,
+    json_default,
+    verify_token,
+)
 from jetstream_observability import _value, collect_stream_metrics
 from metrics import METRICS
 
@@ -314,7 +319,7 @@ def main():
     )
     worker.start()
     try:
-        ThreadingHTTPServer(
+        BoundedThreadingHTTPServer(
             ("0.0.0.0", 8005), OperationsHandler
         ).serve_forever()
     finally:
