@@ -39,3 +39,10 @@ Quality: `./scripts/install-quality-hooks.sh` enables Ruff pre-commit/pre-push
 checks; `python3 -m unittest discover -s tests` runs regressions. The image
 workflow runs tests, formatting and lint before publishing
 `ghcr.io/myota-platform/myota-operations-service:latest`.
+
+The [status API/UI guide](https://github.com/myota-platform/myota-docs/blob/main/docs/jetstream-admin-status.md)
+documents sample semantics, permissions, deployment and alerts. The
+[geodata scaling delivery record](https://github.com/myota-platform/myota-docs/blob/main/docs/geodata-horizontal-scaling-roadmap.md#latest-delivery-and-evidence--7-october-2026)
+links the integration evidence and remaining qualification gates. Preprocessing,
+promotion and deletion consumers remain geodata-owned; operational visibility
+does not make this service a shared business-queue executor.
