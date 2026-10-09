@@ -63,7 +63,7 @@ checks; `python3 -m unittest discover -s tests` runs regressions. The image
 workflow runs tests, formatting and lint before publishing
 `ghcr.io/myota-platform/myota-operations-service:latest`.
 
-The [status API/UI guide](https://github.com/myota-platform/myota-docs/blob/main/docs/jetstream-admin-status.md)
+The [status API/UI guide](https://github.com/myota-platform/myota-docs/blob/main/docs/operations/messaging/jetstream-admin-status.md)
 documents sample semantics, permissions, deployment and alerts. The
 [geodata scaling delivery record](https://github.com/myota-platform/myota-docs/blob/main/docs/geodata-horizontal-scaling-roadmap.md#latest-delivery-and-evidence--7-october-2026)
 links the integration evidence and remaining qualification gates. Preprocessing,
