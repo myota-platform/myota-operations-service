@@ -118,9 +118,7 @@ class AuthorizationTests(unittest.TestCase):
         import urllib.error
 
         params = self.params({"roles": ["GLOBAL_OPERATOR"]})
-        error = urllib.error.HTTPError(
-            "http://identity/me", 403, "revoked", {}, None
-        )
+        error = urllib.error.HTTPError("http://identity/me", 403, "revoked", {}, None)
         with patch("operations.urllib.request.urlopen", side_effect=error):
             with self.assertRaises(PermissionError):
                 current_identity(params)
