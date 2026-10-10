@@ -260,7 +260,6 @@ def main():
         raise RuntimeError("CORE_DATABASE_URL is required")
     logging.basicConfig(level=logging.INFO)
     stop = threading.Event()
-    worker = threading.Thread(
     storage_worker = threading.Thread(
         target=poll_storage, args=(stop,), name="storage-sampler", daemon=True
     )
