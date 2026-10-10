@@ -214,7 +214,9 @@ OperationsHandler.routes = {
 }
 
 
-def record_snapshot(snapshot: dict[str, Any], kind: str = "object-storage") -> None:
+def record_snapshot(
+    snapshot: dict[str, Any], kind: str = "object-storage"
+) -> None:
     table = SNAPSHOT_TABLES[kind]
     with OperationsHandler.store.transaction() as connection:
         connection.execute(
