@@ -124,4 +124,3 @@ class AuthorizationTests(unittest.TestCase):
         with patch("operations.urllib.request.urlopen", side_effect=error):
             with self.assertRaises(PermissionError):
                 current_identity(params)
-
