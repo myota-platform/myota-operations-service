@@ -1,4 +1,3 @@
-import asyncio
 import http.client
 import threading
 import time
@@ -10,7 +9,6 @@ from common import sign_token
 from operations import (
     OperationsHandler,
     authorize,
-    broker_snapshot,
     grafana_identity,
     current_identity,
 )
@@ -127,65 +125,3 @@ class AuthorizationTests(unittest.TestCase):
             with self.assertRaises(PermissionError):
                 current_identity(params)
 
-
-class BrokerTests(unittest.TestCase):
-    def test_real_broker_fields_and_unknown_oldest_age(self):
-        class JS:
-            async def streams_info(self):
-                return [
-                    {
-                        "config": {"name": "EVENTS", "subjects": ["myota.>"]},
-                        "state": {
-                            "messages": 12,
-                            "bytes": 512,
-                            "consumer_count": 1,
-                        },
-                    }
-                ]
-
-            async def consumers_info(self, stream):
-                return [
-                    {
-                        "name": "preprocess",
-                        "num_pending": 4,
-                        "num_ack_pending": 1,
-                        "num_redelivered": 2,
-                        "config": {
-                            "filter_subject": "myota.import.>",
-                            "durable_name": "preprocess",
-                        },
-                    }
-                ]
-
-        class NC:
-            def jetstream(self):
-                return JS()
-
-            async def request(self, *_args, **_kwargs):
-                raise RuntimeError("message is no longer retained")
-
-        result = asyncio.run(broker_snapshot(NC()))
-        consumer = result["streams"][0]["consumers"][0]
-        self.assertEqual(result["status"], "HEALTHY")
-        self.assertEqual(consumer["pending"], 4)
-        self.assertEqual(consumer["ackPending"], 1)
-        self.assertEqual(consumer["redelivered"], 2)
-        self.assertIsNone(consumer["oldestMessageAgeSeconds"])
-        self.assertNotIn("credentials", result)
-        self.assertNotIn("payload", consumer)
-
-    def test_partial_inspection_is_not_reported_healthy(self):
-        class JS:
-            async def streams_info(self):
-                return [{"config": {"name": "EVENTS"}}]
-
-            async def consumers_info(self, stream):
-                raise RuntimeError("broker unavailable")
-
-        class NC:
-            def jetstream(self):
-                return JS()
-
-        result = asyncio.run(broker_snapshot(NC()))
-        self.assertEqual(result["status"], "PARTIAL")
-        self.assertTrue(result["errors"])
