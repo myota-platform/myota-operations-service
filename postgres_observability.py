@@ -113,15 +113,15 @@ def sample_once() -> None:
             labels,
         )
         METRICS.set_gauge(
-            "myota_postgresql_connections", sample.connections, labels
+            "myota_postgresql_connections", sample.connections, labels,
         )
         METRICS.set_gauge(
-            "myota_postgresql_max_connections", sample.max_connections, labels
+            "myota_postgresql_max_connections", sample.max_connections, labels,
         )
         METRICS.set_gauge(
             "myota_postgresql_database_size_bytes",
             sample.database_size_bytes,
-            labels
+            labels,
         )
         for name, value in (
             ("commits", sample.commits),
