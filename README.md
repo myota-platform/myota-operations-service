@@ -3,7 +3,8 @@
 This service has been removed from the MyOTA runtime. Deploy and its
 synchronized Platform mirror no longer define an Operations Deployment,
 Service, Compose workload, Gateway route, Grafana caller, or database sampler.
-No supported runtime image or HTTP API is published from this source.
+The repository's image publishing job is disabled; any existing registry image
+is historical and must not be deployed.
 
 Replacement ownership:
 
@@ -15,8 +16,7 @@ Replacement ownership:
   Editor and `observability.view` readers to Viewer.
 - NATS broker monitoring belongs to NATS Surveyor and Grafana.
 
-The old implementation and its migration history remain in this repository
-as reference until the repository archive operation is completed. Do not
-deploy or extend it. The cross-repository evidence and remaining archive
-status are tracked in
+The old implementation and migration history remain as reference until the
+repository archive operation is completed. Do not deploy or extend it. The
+cross-repository evidence and archive status are tracked in
 [myota-docs](https://github.com/myota-platform/myota-docs/blob/main/docs/observability/evidence/operations-service-retirement-2026-10-12.md).
