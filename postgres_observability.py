@@ -110,7 +110,7 @@ def sample_once() -> None:
         METRICS.set_gauge(
             "myota_postgresql_last_sample_timestamp_seconds",
             time.time(),
-            labels
+            labels,
         )
         METRICS.set_gauge(
             "myota_postgresql_connections", sample.connections, labels
