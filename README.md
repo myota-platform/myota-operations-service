@@ -25,8 +25,11 @@ an exhaustive object or request log.
 `operations_storage_snapshot` is service-owned control-plane data in
 `myota_core`. Migration `002_storage_snapshots.sql` is synchronized to
 Deploy/Platform core migration `003_storage_snapshots.sql`; numbered
-migrations are discovered automatically. API instances are stateless and the
-database pool is bounded.
+migrations are discovered automatically. Migration
+`003_retire_jetstream_snapshots.sql` retires the former NATS history table and
+is mirrored as core migration `005_retire_jetstream_snapshots.sql`. The verified
+pre-cutover backup is retained outside source control. API instances are
+stateless and the database pool is bounded.
 
 Configuration: `CORE_DATABASE_URL`, `MYOTA_AUTH_SIGNING_KEY`,
 `OPERATIONS_POLL_SECONDS` (30 seconds by default, minimum 10),
