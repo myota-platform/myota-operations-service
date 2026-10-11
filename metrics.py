@@ -46,6 +46,19 @@ class MetricsRegistry:
         with self._lock:
             self._counters[key] += value
 
+    def set_counter(
+        self,
+        name: str,
+        value: float,
+        labels: Mapping[str, object] | None = None,
+    ) -> None:
+        key = (
+            name,
+            tuple(sorted((str(k), str(v)) for k, v in (labels or {}).items())),
+        )
+        with self._lock:
+            self._counters[key] = float(value)
+
     def set_gauge(
         self,
         name: str,

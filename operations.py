@@ -25,6 +25,7 @@ from common import (
 )
 from metrics import METRICS
 from storage_observability import storage_snapshot
+from postgres_observability import poll_postgres
 
 LOG = logging.getLogger("myota.operations")
 POLL_SECONDS = max(10, int(os.environ.get("OPERATIONS_POLL_SECONDS", "30")))
@@ -270,6 +271,10 @@ def main():
         target=poll_storage, args=(stop,), name="storage-sampler", daemon=True
     )
     storage_worker.start()
+    postgres_worker = threading.Thread(
+        target=poll_postgres, args=(stop,), name="postgres-sampler", daemon=True
+    )
+    postgres_worker.start()
     try:
         BoundedThreadingHTTPServer(
             ("0.0.0.0", 8005), OperationsHandler
@@ -277,6 +282,7 @@ def main():
     finally:
         stop.set()
         storage_worker.join(timeout=15)
+        postgres_worker.join(timeout=15)
         OperationsHandler.store.close()
 
 
