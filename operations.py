@@ -272,7 +272,10 @@ def main():
     )
     storage_worker.start()
     postgres_worker = threading.Thread(
-        target=poll_postgres, args=(stop,), name="postgres-sampler", daemon=True
+        target=poll_postgres,
+        args=(stop,),
+        name="postgres-sampler",
+        daemon=True,
     )
     postgres_worker.start()
     try:

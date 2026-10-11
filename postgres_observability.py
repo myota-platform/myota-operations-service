@@ -20,7 +20,12 @@ LOG = logging.getLogger("myota.operations.postgres")
 POLL_SECONDS = max(15, int(os.environ.get("OPERATIONS_PG_POLL_SECONDS", "30")))
 DATABASES = (
     ("core", "OPERATIONS_PG_CORE_HOST", "myota-core-postgres", "myota_core"),
-    ("activity", "OPERATIONS_PG_ACTIVITY_HOST", "myota-activity-postgres", "myota_activity"),
+    (
+        "activity",
+        "OPERATIONS_PG_ACTIVITY_HOST",
+        "myota-activity-postgres",
+        "myota_activity",
+    ),
     ("geo", "OPERATIONS_PG_GEO_HOST", "myota-geo-postgis", "myota_geo"),
 )
 
@@ -37,7 +42,9 @@ class DatabaseSample:
     postgis_version: str | None = None
 
 
-def _sample(database: str, host_env: str, default_host: str, dbname: str) -> DatabaseSample:
+def _sample(
+    database: str, host_env: str, default_host: str, dbname: str
+) -> DatabaseSample:
     password_name = f"MYOTA_PG_{database.upper()}_MONITOR_PASSWORD"
     password = os.environ.get(password_name)
     if not password:
@@ -62,7 +69,9 @@ def _sample(database: str, host_env: str, default_host: str, dbname: str) -> Dat
             stats = cursor.fetchone()
             if stats is None:
                 raise RuntimeError("database statistics row is unavailable")
-            cursor.execute("SELECT current_setting('max_connections')::integer")
+            cursor.execute(
+                "SELECT current_setting('max_connections')::integer"
+            )
             max_connections = cursor.fetchone()[0]
             cursor.execute("SELECT pg_database_size(current_database())")
             size_bytes = cursor.fetchone()[0]
@@ -99,7 +108,9 @@ def sample_once() -> None:
             continue
         METRICS.set_gauge("myota_postgresql_up", 1, labels)
         METRICS.set_gauge(
-            "myota_postgresql_last_sample_timestamp_seconds", time.time(), labels
+            "myota_postgresql_last_sample_timestamp_seconds",
+            time.time(),
+            labels
         )
         METRICS.set_gauge(
             "myota_postgresql_connections", sample.connections, labels
@@ -108,7 +119,9 @@ def sample_once() -> None:
             "myota_postgresql_max_connections", sample.max_connections, labels
         )
         METRICS.set_gauge(
-            "myota_postgresql_database_size_bytes", sample.database_size_bytes, labels
+            "myota_postgresql_database_size_bytes",
+            sample.database_size_bytes,
+            labels
         )
         for name, value in (
             ("commits", sample.commits),
