@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from myota_logging import configure_logging
+
 import json
 import logging
 import os
@@ -260,7 +262,7 @@ def poll_storage(stop: threading.Event) -> None:
 def main():
     if not OperationsHandler.store.durable:
         raise RuntimeError("CORE_DATABASE_URL is required")
-    logging.basicConfig(level=logging.INFO)
+    configure_logging("myota-operations", component="api-and-sampler")
     stop = threading.Event()
     storage_worker = threading.Thread(
         target=poll_storage, args=(stop,), name="storage-sampler", daemon=True
