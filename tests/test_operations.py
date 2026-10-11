@@ -14,6 +14,16 @@ from operations import (
 )
 
 
+class RouteBoundaryTests(unittest.TestCase):
+    def test_operations_has_no_seaweedfs_monitoring_routes(self):
+        routes = OperationsHandler.routes
+        self.assertIn(("GET", "/v1/operations/observability-session"), routes)
+        self.assertNotIn(("GET", "/v1/operations/object-storage"), routes)
+        self.assertNotIn(
+            ("GET", "/v1/operations/object-storage/snapshots"), routes
+        )
+
+
 class ProxyHeaderTests(unittest.TestCase):
     def test_trusted_headers_follow_account_role_and_denial_has_no_identity(
         self,
