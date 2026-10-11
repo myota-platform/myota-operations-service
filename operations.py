@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from myota_logging import configure_logging
+from myota_logging import configure_logging, inject_trace_context
 
 import json
 import logging
@@ -55,9 +55,11 @@ def grafana_identity(account: dict[str, Any]) -> dict[str, str]:
 def current_identity(params: dict[str, Any]) -> dict[str, Any]:
     authorize(params)
     identity_url = os.environ.get("MYOTA_IDENTITY_URL", "http://identity:8001")
+    headers = {"Authorization": params["Authorization"]}
+    inject_trace_context(headers)
     request = urllib.request.Request(
         identity_url.rstrip("/") + "/v1/identity/me",
-        headers={"Authorization": params["Authorization"]},
+        headers=headers,
     )
     try:
         with urllib.request.urlopen(request, timeout=5) as response:
